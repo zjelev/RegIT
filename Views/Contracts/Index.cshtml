@@ -1,0 +1,109 @@
+@* @model IEnumerable<Contracts.Models.Contract> *@
+@model Contracts.Models.ResponsibleViewModel
+
+@{
+    ViewData["Title"] = "Списък";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<p>
+    <a asp-action="Create">Добави</a>
+</p>
+
+<form asp-controller="Contracts" asp-action="Index" method="get">
+    <p>
+        <select asp-for="Responsible" asp-items="Model.Responsibles">
+            <option value="">Всички</option>
+        </select>
+
+        Предмет: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Търси" />
+    </p>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].SignedOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].ValidFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].RegNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].Term)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].ControlledBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].Responsible)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].Guarantee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].WaysOfCollection)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contracts![0].InformationList)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Contracts!)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SignedOn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ValidFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Term)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ControlledBy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Responsible)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Guarantee)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WaysOfCollection)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InformationList)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редактирай</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Детайли</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
