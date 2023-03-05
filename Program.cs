@@ -3,6 +3,7 @@
 // dotnet ef migrations add InitialCreate
 // dotnet ef database update
 // dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
+// git update-index --assume-unchanged .\appsettings.json
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 // Add services to the container.
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = false; //sendgrid
+        options.SignIn.RequireConfirmedAccount = true; //sendgrid
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = false;
         options.Password.RequireNonAlphanumeric = false;
@@ -77,6 +78,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+//app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

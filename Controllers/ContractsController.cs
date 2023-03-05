@@ -105,6 +105,7 @@ namespace Contracts.Controllers
         }
 
         // GET: Contracts/Edit/5
+        [Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Contract == null)
@@ -121,7 +122,7 @@ namespace Contracts.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,SignedOn,Title,ValidFrom,RegNum,Subject,Value,Term,ControlledBy,Responsible,Guarantee,WaysOfCollection,InformationList")] Contract contract)
         {
             if (id != contract.Id)
@@ -147,6 +148,7 @@ namespace Contracts.Controllers
         }
 
         // GET: Contracts/Delete/5
+        [Authorize(Roles = "Administrators")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Contract == null)
