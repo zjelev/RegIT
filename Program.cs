@@ -7,9 +7,9 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Contracts.Data;
+using Regit.Data;
 using Microsoft.AspNetCore.Authorization;
-using Contracts.Authorization;
+using Regit.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 

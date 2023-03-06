@@ -1,9 +1,9 @@
-using Contracts.Authorization;
-using Contracts.Models;
+using Regit.Authorization;
+using Regit.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Contracts.Data;
+namespace Regit.Data;
 
 public static class SeedData
 {
@@ -58,7 +58,7 @@ public static class SeedData
         var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
 
         if (userManager == null)
-           throw new Exception("userManager is null");
+            throw new Exception("userManager is null");
 
         var user = await userManager.FindByIdAsync(uid);
 
@@ -72,43 +72,71 @@ public static class SeedData
 
     public static void SeedDB(ApplicationDbContext context, string adminID)
     {
-        if (context.Contract.Any())
+        if (context.Departments.Any() && context.Contracts.Any())
             return;
 
-        context.Contract.AddRange(
+        context.Departments.AddRange(
+            new Department
+            {
+                Name = "МО"
+            },
+            new Department
+            {
+                Name = "ЕО"
+            },
+            new Department
+            {
+                Name = "ИО"
+            },
+            new Department
+            {
+                Name = "АО"
+            }
+        );
+        
+        if (context.Contracts.Any())
+            return;
+
+        context.Contracts.AddRange(
             new Contract
             {
                 SignedOn = DateTime.Now,
-                Subject = "Consultation",
+                Subject = "Обучение",
                 ValidFrom = DateTime.Parse("2023-2-28"),
                 RegNum = "123-321",
-                Value = 2337.99M
+                Value = 2337.99M,
+                Responsible = context.Departments.Where(d => d.Name == "АО").FirstOrDefault()
             },
             new Contract
             {
                 SignedOn = DateTime.Now.AddDays(1),
-                Subject = "Delivery of materials",
+                Subject = "Доставка на метали",
                 ValidFrom = DateTime.Parse("2023-3-01"),
                 RegNum = "321",
-                Value = 3537.99M
+                Value = 3537.99M,
+                Responsible = context.Departments.Where(d => d.Name == "МО").FirstOrDefault()
             },
             new Contract
             {
                 SignedOn = DateTime.Now.AddDays(2),
-                Subject = "Support",
+                Subject = "Поддръжка на оборудване",
                 ValidFrom = DateTime.Parse("2023-3-02"),
                 RegNum = "365-698",
-                Value = 2337.99M
+                Value = 2337.99M,
+                Responsible = context.Departments.Where(d => d.Name == "ИО").FirstOrDefault()
+
             },
             new Contract
             {
                 SignedOn = DateTime.Now.AddDays(3),
-                Subject = "Something else",
+                Subject = "Доставка на ел. матeриали",
                 ValidFrom = DateTime.Parse("2023-3-04"),
                 RegNum = "94",
-                Value = 2337.99M
+                Value = 2337.99M,
+                Responsible = context.Departments.Where(d => d.Name == "ЕО").FirstOrDefault()
             }
         );
+
         context.SaveChanges();
     }
 }

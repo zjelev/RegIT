@@ -1,4 +1,4 @@
-namespace Contracts.Models;
+namespace Regit.Models;
 
 public class ErrorViewModel
 {

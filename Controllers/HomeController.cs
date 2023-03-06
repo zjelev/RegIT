@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Contracts.Models;
+using Regit.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Contracts.Controllers;

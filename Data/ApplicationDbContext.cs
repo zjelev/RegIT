@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Contracts.Models;
+using Regit.Models;
 
-namespace Contracts.Data;
+namespace Regit.Data;
 
 public class ApplicationDbContext : IdentityDbContext
 {
@@ -10,5 +10,6 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-    public DbSet<Contract> Contract { get; set; } = default!;
+    public DbSet<Contract> Contracts { get; set; } = default!;
+    public DbSet<Department> Departments { get; set; } = default!;
 }

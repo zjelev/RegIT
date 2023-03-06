@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Contracts.Models;
+namespace Regit.Models;
 
-[Table("Contracts")]
 public class Contract
 {
     public int Id { get; set; }
@@ -31,11 +30,11 @@ public class Contract
     [Display(Name = "Срок")]
     public string? Term { get; set; }
 
-    [Display(Name = "Контрол от")]
-    public string? ControlledBy { get; set; }
+    [Display(Name = "Контролиращ отдел")]
+    public Department? ControlledBy { get; set; }
 
-    [Display(Name = "Отговорник")]
-    public string? Responsible { get; set; }
+    [Display(Name = "Отговорен отдел")]
+    public Department? Responsible { get; set; }
 
     [DataType(DataType.Currency), Column(TypeName = "decimal(18, 2)")]
     [Display(Name = "Гаранция")]
@@ -50,9 +49,11 @@ public class Contract
     [Display(Name = "Инф. лист")]
     public string? InformationList { get; set; }
 
+    [Display(Name = "Инф. лист")]
     public string? OwnerID { get; set; }
 
-    public ContractStatus Status { get; set; }
+    [Display(Name = "Инф. лист")]
+    public ContractStatus Status { get; set; }    
 }
 
 public enum ContractStatus

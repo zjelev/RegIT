@@ -1,5 +1,5 @@
-@* @model IEnumerable<Contracts.Models.Contract> *@
-@model Contracts.Models.ResponsibleViewModel
+@* @model IEnumerable<Regit.Models.Contract> *@
+@model Regit.Models.ResponsibleViewModel
 
 @{
     ViewData["Title"] = "Списък";
@@ -10,98 +10,116 @@
 <p>
     <a asp-action="Create">Добави</a>
 </p>
+<p>
+    <a asp-action="Download" asp-route-searchString=@ViewBag.SearchString
+    asp-route-responsible=@ViewBag.Responsible>Свали</a>
+</p>
 
-<form asp-controller="Contracts" asp-action="Index" method="get">
+@* <form asp-controller="Contracts" asp-action="Index" method="get">
     <p>
-        <select asp-for="Responsible" asp-items="Model.Responsibles">
+        <select asp-for="Responsible" asp-items=@Model.Responsibles>
             <option value="">Всички</option>
         </select>
 
         Предмет: <input type="text" asp-for="SearchString" />
         <input type="submit" value="Търси" />
     </p>
-</form>
+</form> *@
+
+<form asp-controller="Contracts" asp-action="Index" method="get">
+        <select asp-for="Responsible" asp-items=@Model.Responsibles>
+            <option value="">Всички</option>
+        </select>
+        Предмет: <input type="text" asp-for="SearchString" />
+        <label searchFrom="FromDate">От дата:</label>
+        <input type="date" name="from" placeholder="dd-MM-yyyy" value="@ViewBag.From" />
+        <label searchTo="ToDate">До дата:</label>
+        <input type="date" name="to" placeholder="dd-MM-yyyy" value="@ViewBag.To" />
+        <input type=submit value="Търси" />
+    </form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].SignedOn)
+                RegNum
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].ValidFrom)
+                SignedOn
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].RegNum)
+                ValidFrom
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].Subject)
+                Subject
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].Value)
+                Value
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].Term)
+                Term
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].ControlledBy)
+                ControlledBy
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].Responsible)
+                Responsible
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].Guarantee)
+                Guarantee
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].WaysOfCollection)
+                WaysOfCollection
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Contracts![0].InformationList)
+                InformationList
             </th>
-            <th></th>
+            <th>
+                Действие
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Contracts!)
+        @foreach (var contract in Model.Contracts)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SignedOn)
+                    @contract.RegNum
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ValidFrom)
+                    @contract.SignedOn
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RegNum)
+                    @contract.ValidFrom
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Subject)
+                    @contract.Subject
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Value)
+                    @contract.Value
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Term)
+                    @contract.Term
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ControlledBy)
+                    @contract.Responsible?.Name
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Responsible)
+                    @contract.ControlledBy?.Name
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Guarantee)
+                    @contract.Guarantee
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.WaysOfCollection)
+                    @contract.WaysOfCollection
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.InformationList)
+                    @contract.InformationList
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Редактирай</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Детайли</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Изтрий</a>
+                    <a asp-action="Edit" asp-route-id="@contract.Id">Редактирай</a> |
+                    <a asp-action="Details" asp-route-id="@contract.Id">Детайли</a> |
+                    <a asp-action="Delete" asp-route-id="@contract.Id">Изтрий</a>
                 </td>
             </tr>
         }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 
-namespace Contracts.Models;
+namespace Regit.Models;
 
 public class ResponsibleViewModel
 {
