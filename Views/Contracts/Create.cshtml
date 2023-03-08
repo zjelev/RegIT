@@ -1,4 +1,4 @@
-@model Regit.Models.Contract
+@model Contract
 
 @{
     ViewData["Title"] = "Добавяне";
@@ -13,6 +13,11 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="RegNum" class="control-label"></label>
+                <input asp-for="RegNum" class="form-control" />
+                <span asp-validation-for="RegNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="SignedOn" class="control-label"></label>
                 <input asp-for="SignedOn" class="form-control" />
                 <span asp-validation-for="SignedOn" class="text-danger"></span>
@@ -21,11 +26,6 @@
                 <label asp-for="ValidFrom" class="control-label"></label>
                 <input asp-for="ValidFrom" class="form-control" />
                 <span asp-validation-for="ValidFrom" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RegNum" class="control-label"></label>
-                <input asp-for="RegNum" class="form-control" />
-                <span asp-validation-for="RegNum" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Subject" class="control-label"></label>
@@ -68,6 +68,11 @@
                 <span asp-validation-for="InformationList" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="FilePath" class="control-label"></label>
+                <input asp-for="FilePath" class="form-control" />
+                <span asp-validation-for="FilePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -75,7 +80,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Обратно към списъка</a>
 </div>
 
 @section Scripts {

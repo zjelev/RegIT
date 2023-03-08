@@ -72,70 +72,81 @@ public static class SeedData
 
     public static void SeedDB(ApplicationDbContext context, string adminID)
     {
-        if (context.Departments.Any() && context.Contracts.Any())
-            return;
+        if (!context.Departments.Any())
+            context.Departments.AddRange(
+                new Department
+                {
+                    Name = "МО"
+                },
+                new Department
+                {
+                    Name = "ЕО"
+                },
+                new Department
+                {
+                    Name = "ИО"
+                },
+                new Department
+                {
+                    Name = "АО"
+                },
+                new Department
+                {
+                    Name = "Инвестиции"
+                }
+            );
 
-        context.Departments.AddRange(
-            new Department
-            {
-                Name = "МО"
-            },
-            new Department
-            {
-                Name = "ЕО"
-            },
-            new Department
-            {
-                Name = "ИО"
-            },
-            new Department
-            {
-                Name = "АО"
-            }
-        );
-        
-        if (context.Contracts.Any())
-            return;
+        context.SaveChanges();
 
-        context.Contracts.AddRange(
-            new Contract
-            {
-                SignedOn = DateTime.Now,
-                Subject = "Обучение",
-                ValidFrom = DateTime.Parse("2023-2-28"),
-                RegNum = "123-321",
-                Value = 2337.99M,
-                Responsible = context.Departments.Where(d => d.Name == "АО").FirstOrDefault()
-            },
-            new Contract
-            {
-                SignedOn = DateTime.Now.AddDays(1),
-                Subject = "Доставка на метали",
-                ValidFrom = DateTime.Parse("2023-3-01"),
-                RegNum = "321",
-                Value = 3537.99M,
-                Responsible = context.Departments.Where(d => d.Name == "МО").FirstOrDefault()
-            },
-            new Contract
-            {
-                SignedOn = DateTime.Now.AddDays(2),
-                Subject = "Поддръжка на оборудване",
-                ValidFrom = DateTime.Parse("2023-3-02"),
-                RegNum = "365-698",
-                Value = 2337.99M,
-                Responsible = context.Departments.Where(d => d.Name == "ИО").FirstOrDefault()
+        if (!context.Contracts.Any())
+            context.Contracts.AddRange(
+                new Contract
+                {
+                    SignedOn = DateOnly.FromDateTime(DateTime.Now),
+                    Subject = "Обучение",
+                    ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(2)),
+                    RegNum = "TO 1/2023",
+                    Value = 2337.99M,
+                    Responsible = context.Departments.Where(d => d.Name == "АО").FirstOrDefault()
+                },
+                new Contract
+                {
+                    SignedOn = DateOnly.FromDateTime(DateTime.Now.AddDays(1)),
+                    Subject = "Доставка на метали",
+                    ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(3)),
+                    RegNum = "TO 2/2023",
+                    Value = 3537.99M,
+                    Responsible = context.Departments.Where(d => d.Name == "МО").FirstOrDefault()
+                },
+                new Contract
+                {
+                    SignedOn = DateOnly.FromDateTime(DateTime.Now.AddDays(4)),
+                    Subject = "Поддръжка на оборудване",
+                    ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(5)),
+                    RegNum = "VD 3/2023",
+                    Value = 2337.99M,
+                    Responsible = context.Departments.Where(d => d.Name == "ИО").FirstOrDefault()
 
-            },
-            new Contract
-            {
-                SignedOn = DateTime.Now.AddDays(3),
-                Subject = "Доставка на ел. матeриали",
-                ValidFrom = DateTime.Parse("2023-3-04"),
-                RegNum = "94",
-                Value = 2337.99M,
-                Responsible = context.Departments.Where(d => d.Name == "ЕО").FirstOrDefault()
-            }
-        );
+                },
+                new Contract
+                {
+                    SignedOn = DateOnly.FromDateTime(DateTime.Now.AddDays(6)),
+                    Subject = "Доставка на ел. матeриали",
+                    ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(7)),
+                    RegNum = "TO 4/2023",
+                    Value = 2337.99M,
+                    Responsible = context.Departments.Where(d => d.Name == "ЕО").FirstOrDefault()
+                },
+                new Contract
+                {
+                    SignedOn = DateOnly.FromDateTime(DateTime.Now.AddDays(8)),
+                    Subject = "Строителство",
+                    ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(9)),
+                    RegNum = "TO 21/2023",
+                    Value = 2337.99M,
+                    Responsible = context.Departments.Where(d => d.Name == "Инвестиции").FirstOrDefault()
+                }
+            );
 
         context.SaveChanges();
     }

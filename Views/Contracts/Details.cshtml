@@ -1,4 +1,4 @@
-@model Regit.Models.Contract
+@model Contract
 
 @{
     ViewData["Title"] = "Детайли";
@@ -79,6 +79,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Редактиране</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id">Изтриване</a> |
+    <a asp-action="Index">Обратно към списъка</a>
 </div>

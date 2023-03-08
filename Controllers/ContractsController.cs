@@ -7,6 +7,8 @@ using Regit.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using OfficeOpenXml;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Regit.Controllers;
 
@@ -15,12 +17,22 @@ public class ContractsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IAuthorizationService _authorizationService;
+    private readonly string[] _tableHeader;
 
     public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IAuthorizationService authorizationService)
     {
         _context = context;
         _userManager = userManager;
         _authorizationService = authorizationService;
+        _tableHeader = TypeDescriptor.GetProperties(typeof(Contract))
+        .Cast<PropertyDescriptor>()
+        .Select(property =>
+            {
+                DisplayAttribute? displayAttribute = property.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                string? propertyName = displayAttribute?.Name ?? property.Name;
+                return (propertyName);
+            })
+        .ToArray();
     }
 
     // GET: Contracts
@@ -28,7 +40,7 @@ public class ContractsController : Controller
     {
         ViewBag.Responsible = responsible;
         ViewBag.SearchString = searchString;
-        
+
         var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
                            User.IsInRole(Constants.AdministratorsRole);
 
@@ -48,12 +60,12 @@ public class ContractsController : Controller
             if (!String.IsNullOrEmpty(responsible))
                 contracts = contracts.Where(c => c.Responsible.Name == responsible);
 
-            var departmentVM = new ResponsibleViewModel
+            var model = new ContractsViewModel
             {
                 Responsibles = new SelectList(await departmentQuery.Distinct().ToListAsync()),
                 Contracts = await contracts.ToListAsync()
             };
-            return View(departmentVM);
+            return View(model);
         }
         else
             return Forbid();
@@ -64,13 +76,10 @@ public class ContractsController : Controller
 
     public IActionResult Download(string? searchString, string? responsible)
     {
-        string[] tableHeader = "Рег.№;Подписан на;Валиден от;Предмет;Стойност лв. без ДДС;Срок;Контролиращ отдел;Отговорен отдел;Гаранция;Начин на събиране;Инф. лист;Действие;Качил;Статус".Split(";", StringSplitOptions.RemoveEmptyEntries);
-        
-        // query data from database
         var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
                            User.IsInRole(Constants.AdministratorsRole);
 
-        var currentUserId = _userManager.GetUserId(User);  
+        var currentUserId = _userManager.GetUserId(User);
         if (_context.Contracts == null)
             return Problem("Entity set 'ContractContext.Contract'  is null.");
 
@@ -91,8 +100,8 @@ public class ContractsController : Controller
         ExcelWorksheet ws = package.Workbook.Worksheets.Add("Sheet1");
         ws.Cells.LoadFromCollection(contracts, true);
 
-        for (int i = 0; i < tableHeader.Length; i++)
-            ws.Cells[1, i + 1].Value = tableHeader[i];
+        for (int i = 0; i < _tableHeader.Count(); i++)
+            ws.Cells[1, i + 1].Value = _tableHeader[i];
 
         package.Save();
 
@@ -116,7 +125,7 @@ public class ContractsController : Controller
 
         var currentUserId = _userManager.GetUserId(User);
 
-        if (!isAuthorized && currentUserId != contract.OwnerID && contract.Status != ContractStatus.Approved)
+        if (!isAuthorized && currentUserId != contract.OwnerID && contract.Status != ContractStatus.Одобрен)
             return Forbid();
 
         return View(contract);
@@ -128,9 +137,8 @@ public class ContractsController : Controller
     // POST: Contracts/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,SignedOn,Title,ValidFrom,RegNum,Subject,Value,Term,ControlledBy,Responsible,Guarantee,WaysOfCollection,InformationList")] Contract contract)
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
+    public async Task<IActionResult> Create([Bind(ContractsViewModel.props)] Contract contract)
     {
         if (ModelState.IsValid)
         {
@@ -164,9 +172,8 @@ public class ContractsController : Controller
     // POST: Contracts/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-    [HttpPost]
-    [ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,SignedOn,Title,ValidFrom,RegNum,Subject,Value,Term,ControlledBy,Responsible,Guarantee,WaysOfCollection,InformationList")] Contract contract)
+    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
+    public async Task<IActionResult> Edit(int id, [Bind(ContractsViewModel.props)] Contract contract)
     {
         if (id != contract.Id)
             return NotFound();

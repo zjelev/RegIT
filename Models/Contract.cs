@@ -8,14 +8,14 @@ public class Contract
     public int Id { get; set; }
 
     [Required, Display(Name = "Подписан на"), DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-    public DateTime SignedOn { get; set; }
+    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = false)]
+    public DateOnly SignedOn { get; set; }
 
     [Required, Display(Name = "Валиден от"), DataType(DataType.Date)]
-    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-    public DateTime ValidFrom { get; set; }
+    [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
+    public DateOnly ValidFrom { get; set; }
 
-    [Required, Display(Name = "Рег. №")]
+    [Required, Display(Name = "Рег. №"), ]
     public string RegNum { get; set; }
 
     [Required, Display(Name = "Предмет")]
@@ -36,8 +36,8 @@ public class Contract
     [Display(Name = "Отговорен отдел")]
     public Department? Responsible { get; set; }
 
-    [DataType(DataType.Currency), Column(TypeName = "decimal(18, 2)")]
     [Display(Name = "Гаранция")]
+    [DataType(DataType.Currency), Column(TypeName = "decimal(18, 2)")]
     public decimal? Guarantee { get; set; }
     // public HashSet<string> Annexes { get; set; }
     // public HashSet<decimal> Penalties { get; set; }
@@ -49,16 +49,19 @@ public class Contract
     [Display(Name = "Инф. лист")]
     public string? InformationList { get; set; }
 
-    [Display(Name = "Инф. лист")]
+    [Display(Name = "Добавен от")]
     public string? OwnerID { get; set; }
 
-    [Display(Name = "Инф. лист")]
-    public ContractStatus Status { get; set; }    
+    [Display(Name = "Статус")]
+    public ContractStatus Status { get; set; }
+
+    [Display(Name = "Файл")]
+    public string? FilePath { get; set; } 
 }
 
 public enum ContractStatus
 {
-    Submitted,
-    Approved,
-    Rejected
+    Качен,
+    Одобрен,
+    Отхвърлен
 }
