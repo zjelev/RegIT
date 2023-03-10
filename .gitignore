@@ -356,6 +356,6 @@ log.txt
 *.csv
 *.sql
 *Last.txt
-config.json
-logo.png
-appsettings.json
+*config.json
+*logo.png
+*appsettings.json
