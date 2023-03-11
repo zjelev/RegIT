@@ -92,7 +92,7 @@ public static class SeedData
                 },
                 new Department
                 {
-                    Name = "Инвестиции"
+                    Name = "ИВ"
                 }
             );
 
@@ -144,7 +144,7 @@ public static class SeedData
                     ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(9)),
                     RegNum = "TO 21/2023",
                     Value = 2337.99M,
-                    Responsible = context.Departments.Where(d => d.Name == "Инвестиции").FirstOrDefault()
+                    Responsible = context.Departments.Where(d => d.Name == "ИВ").FirstOrDefault()
                 }
             );
 
