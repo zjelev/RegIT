@@ -358,5 +358,5 @@ log.txt
 *Last.txt
 config.json
 logo.png
-*appsettings.json
+appsettings.json
 Migrations/

@@ -7,8 +7,8 @@ public class ContractsViewModel
 
     public string? searchSubject { get; set; }
     public string? selectDepartment { get; set; }
-    public List<Department>? Departments { get; set; }
-    public List<Contract>? Contracts { get; set; }
+    public IEnumerable<Department>? Departments { get; set; }
+    public IEnumerable<Contract>? Contracts { get; set; }
     public Department Department { get; set; }
     public Contract Contract { get; set; }
 }

@@ -135,7 +135,25 @@ public class ContractsController : Controller
     }
 
     // GET: Contracts/Create
-    public IActionResult Create() => View();
+    public IActionResult Create()
+    {
+        var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
+                           User.IsInRole(Constants.AdministratorsRole);
+
+        var currentUserId = _userManager.GetUserId(User);
+        var departmentQuery = _context.Contracts.OrderBy(c => c.Responsible).Select(c => c.Responsible);
+
+        if (isAuthorized)
+        {
+            var model = new ContractsViewModel
+            {
+                Departments = departmentQuery.Distinct().ToList(),
+            };
+            return View(model);
+        }
+        else
+            return Forbid();
+    }
 
     // POST: Contracts/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -168,9 +186,8 @@ public class ContractsController : Controller
         var contract = await _context.Contracts.FindAsync(id);
         if (contract == null)
             return NotFound();
-        
-        ViewData["Departments"] = _context.Departments.ToList();
 
+        ViewData["Departments"] = _context.Departments.ToList();
         return View(contract);
     }
 
