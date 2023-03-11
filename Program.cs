@@ -1,8 +1,10 @@
-// dotnet new webapp
+// dotnet new mvc -au Individual
+// dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
+// dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+// dotnet aspnet-codegenerator controller -name ContractsController -m Contract -dc Contracts.Data.ApplicationDbContext --relativeFolderPath Controllers --referenceScriptLibraries
 // "@{ Layout = "/Views/Shared/_Layout.cshtml"; }" | Out-File -FilePath Areas\Identity\Pages\_ViewStart.cshtml
 // dotnet ef migrations add InitialCreate
 // dotnet ef database update
-// dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 // git update-index --assume-unchanged .\appsettings.json
 
 using Microsoft.AspNetCore.Identity;
@@ -75,6 +77,7 @@ else
 
 app.UseHttpsRedirection(); //letsencrypt
 app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthorization();

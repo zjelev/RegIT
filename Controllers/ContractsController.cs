@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Regit.Data;
 using Regit.Models;
@@ -19,27 +18,31 @@ public class ContractsController : Controller
     private readonly IAuthorizationService _authorizationService;
     private readonly string[] _tableHeader;
 
+
     public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IAuthorizationService authorizationService)
     {
         _context = context;
         _userManager = userManager;
         _authorizationService = authorizationService;
         _tableHeader = TypeDescriptor.GetProperties(typeof(Contract))
-        .Cast<PropertyDescriptor>()
-        .Select(property =>
-            {
-                DisplayAttribute? displayAttribute = property.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
-                string? propertyName = displayAttribute?.Name ?? property.Name;
-                return (propertyName);
-            })
-        .ToArray();
+            .Cast<PropertyDescriptor>()
+            .Select(property =>
+                {
+                    DisplayAttribute? displayAttribute = property.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                    string? propertyName = displayAttribute?.Name ?? property.Name;
+                    return (propertyName);
+                })
+            .ToArray();
     }
 
     // GET: Contracts
-    public async Task<IActionResult> Index(string searchString, string responsible)
+    public async Task<IActionResult> Index(string searchSubject, string selectDepartment)
     {
-        ViewBag.Responsible = responsible;
-        ViewBag.SearchString = searchString;
+        Console.WriteLine("### Remote: " + HttpContext.Connection.RemoteIpAddress.ToString());
+        Console.WriteLine("### User: " + HttpContext.User.Identity.Name);
+
+        ViewData["Department"] = selectDepartment;
+        ViewData["SearchSubject"] = searchSubject;
 
         var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
                            User.IsInRole(Constants.AdministratorsRole);
@@ -54,15 +57,15 @@ public class ContractsController : Controller
 
         if (isAuthorized)
         {
-            if (!String.IsNullOrEmpty(searchString))
-                contracts = contracts.Where(c => c.Subject!.Contains(searchString));
+            if (!String.IsNullOrEmpty(searchSubject))
+                contracts = contracts.Where(c => c.Subject!.Contains(searchSubject));
 
-            if (!String.IsNullOrEmpty(responsible))
-                contracts = contracts.Where(c => c.Responsible.Name == responsible);
+            if (!String.IsNullOrEmpty(selectDepartment))
+                contracts = contracts.Where(c => c.Responsible.Name == selectDepartment);
 
             var model = new ContractsViewModel
             {
-                Responsibles = new SelectList(await departmentQuery.Distinct().ToListAsync()),
+                Departments = await departmentQuery.Distinct().ToListAsync(),
                 Contracts = await contracts.ToListAsync()
             };
             return View(model);
@@ -74,7 +77,7 @@ public class ContractsController : Controller
     // [HttpPost]
     // public string Index(string searchString, bool notUsed) => "From [HttpPost]Index: filter on " + searchString;
 
-    public IActionResult Download(string? searchString, string? responsible)
+    public IActionResult Download(string? searchSubject, string? department)
     {
         var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
                            User.IsInRole(Constants.AdministratorsRole);
@@ -87,11 +90,11 @@ public class ContractsController : Controller
 
         if (isAuthorized)
         {
-            if (!String.IsNullOrEmpty(searchString))
-                contracts = contracts.Where(c => c.Subject!.Contains(searchString));
+            if (!String.IsNullOrEmpty(searchSubject))
+                contracts = contracts.Where(c => c.Subject!.Contains(searchSubject));
 
-            if (!String.IsNullOrEmpty(responsible))
-                contracts = contracts.Where(c => c.Responsible.Name == responsible);
+            if (!String.IsNullOrEmpty(department))
+                contracts = contracts.Where(c => c.Responsible.Name == department);
         }
 
         using var stream = new MemoryStream();
@@ -138,7 +141,7 @@ public class ContractsController : Controller
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> Create([Bind(ContractsViewModel.props)] Contract contract)
+    public async Task<IActionResult> Create([Bind(Contract.props)] Contract contract)
     {
         if (ModelState.IsValid)
         {
@@ -165,6 +168,8 @@ public class ContractsController : Controller
         var contract = await _context.Contracts.FindAsync(id);
         if (contract == null)
             return NotFound();
+        
+        ViewData["Departments"] = _context.Departments.ToList();
 
         return View(contract);
     }
@@ -173,7 +178,7 @@ public class ContractsController : Controller
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> Edit(int id, [Bind(ContractsViewModel.props)] Contract contract)
+    public async Task<IActionResult> Edit(int id, [Bind(Contract.props)] Contract contract)
     {
         if (id != contract.Id)
             return NotFound();

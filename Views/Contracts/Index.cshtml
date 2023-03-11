@@ -8,11 +8,12 @@
 <h1>@ViewData["Title"]</h1>
 <hr />
 
-<form asp-controller="Contracts" asp-action="Index" method="get">
-    <select asp-for="Responsible" asp-items=@Model.Responsibles>
+<form>
+    <select asp-for="selectDepartment" asp-items="@(new SelectList(Model.Departments, nameof(Department.Name)))"> 
+                                                          @* Model.GroupBy(c => c.Responsible).Select(grp => grp.First()).ToList()))"> *@
         <option value="">Всички</option>
     </select>
-    <span>Предмет: </span><input type="text" asp-for="SearchString" />
+    <span>Предмет: </span><input type="text" asp-for="searchSubject" />
     @* <label searchFrom="FromDate">От дата:</label>
     <input type="date" name="from" placeholder="dd-MM-yyyy" value="@ViewBag.From" />
     <label searchTo="ToDate">До дата:</label>
@@ -22,7 +23,7 @@
 
 <span class = "float-end">
     <a asp-action="Create">Добави</a> | 
-    <a asp-action="Download" asp-route-searchString=@ViewBag.SearchString asp-route-responsible=@ViewBag.Responsible>Свали списък</a>
+    <a asp-action="Download" asp-route-searchSubject=@ViewData["SearchSubject"] asp-route-department=@ViewData["Department"]>Свали списък</a>
 </span>
 
 <table class="table">

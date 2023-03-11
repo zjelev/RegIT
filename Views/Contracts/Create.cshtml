@@ -1,4 +1,4 @@
-@model Contract
+@model ContractsViewModel
 
 @{
     ViewData["Title"] = "Добавяне";
@@ -13,64 +13,70 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="RegNum" class="control-label"></label>
-                <input asp-for="RegNum" class="form-control" />
-                <span asp-validation-for="RegNum" class="text-danger"></span>
+                <label asp-for="Contract.RegNum" class="control-label"></label>
+                <input asp-for="Contract.RegNum" class="form-control" />
+                <span asp-validation-for="Contract.RegNum" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SignedOn" class="control-label"></label>
-                <input asp-for="SignedOn" class="form-control" />
-                <span asp-validation-for="SignedOn" class="text-danger"></span>
+                <label asp-for="Contract.SignedOn" class="control-label"></label>
+                <input asp-for="Contract.SignedOn" class="form-control" />
+                <span asp-validation-for="Contract.SignedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ValidFrom" class="control-label"></label>
-                <input asp-for="ValidFrom" class="form-control" />
-                <span asp-validation-for="ValidFrom" class="text-danger"></span>
+                <label asp-for="Contract.ValidFrom" class="control-label"></label>
+                <input asp-for="Contract.ValidFrom" class="form-control" />
+                <span asp-validation-for="Contract.ValidFrom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Subject" class="control-label"></label>
-                <input asp-for="Subject" class="form-control" />
-                <span asp-validation-for="Subject" class="text-danger"></span>
+                <label asp-for="Contract.Subject" class="control-label"></label>
+                <input asp-for="Contract.Subject" class="form-control" />
+                <span asp-validation-for="Contract.Subject" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Value" class="control-label"></label>
-                <input asp-for="Value" class="form-control" />
-                <span asp-validation-for="Value" class="text-danger"></span>
+                <label asp-for="Contract.Value" class="control-label"></label>
+                <input asp-for="Contract.Value" class="form-control" />
+                <span asp-validation-for="Contract.Value" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Term" class="control-label"></label>
-                <input asp-for="Term" class="form-control" />
-                <span asp-validation-for="Term" class="text-danger"></span>
+                <label asp-for="Contract.Term" class="control-label"></label>
+                <input asp-for="Contract.Term" class="form-control" />
+                <span asp-validation-for="Contract.Term" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ControlledBy" class="control-label"></label>
-                <input asp-for="ControlledBy" class="form-control" />
-                <span asp-validation-for="ControlledBy" class="text-danger"></span>
+                <label asp-for="Contract.ControlledBy" class="control-label"></label>
+                <select asp-for="Departments" class="form-control">
+                </select>
+                <span asp-validation-for="Contract.ControlledBy" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Responsible" class="control-label"></label>
-                <input asp-for="Responsible" class="form-control" />
-                <span asp-validation-for="Responsible" class="text-danger"></span>
+                <label asp-for="Contract.Responsible" class="control-label"></label>
+                <select asp-for="Contract.Responsible" class="form-control">
+                    @* @foreach (var responsible in (List<Department>)ViewData["Departments"])
+                    {
+                        <option class="form-control" >@responsible.Name</option>
+                    } *@
+                </select>
+                <span asp-validation-for="Contract.Responsible" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Guarantee" class="control-label"></label>
-                <input asp-for="Guarantee" class="form-control" />
-                <span asp-validation-for="Guarantee" class="text-danger"></span>
+                <label asp-for="Contract.Guarantee" class="control-label"></label>
+                <input asp-for="Contract.Guarantee" class="form-control" />
+                <span asp-validation-for="Contract.Guarantee" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WaysOfCollection" class="control-label"></label>
-                <input asp-for="WaysOfCollection" class="form-control" />
-                <span asp-validation-for="WaysOfCollection" class="text-danger"></span>
+                <label asp-for="Contract.WaysOfCollection" class="control-label"></label>
+                <input asp-for="Contract.WaysOfCollection" class="form-control" />
+                <span asp-validation-for="Contract.WaysOfCollection" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="InformationList" class="control-label"></label>
-                <input asp-for="InformationList" class="form-control" />
-                <span asp-validation-for="InformationList" class="text-danger"></span>
+                <label asp-for="Contract.InformationList" class="control-label"></label>
+                <input asp-for="Contract.InformationList" class="form-control" />
+                <span asp-validation-for="Contract.InformationList" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FilePath" class="control-label"></label>
-                <input asp-for="FilePath" class="form-control" />
-                <span asp-validation-for="FilePath" class="text-danger"></span>
+                <label asp-for="Contract.FilePath" class="control-label"></label>
+                <input asp-for="Contract.FilePath" class="form-control" />
+                <span asp-validation-for="Contract.FilePath" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
