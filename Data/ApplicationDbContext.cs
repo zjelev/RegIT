@@ -11,8 +11,8 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-    public DbSet<Contract> Contracts { get; set; } = default!;
-    public DbSet<Department> Departments { get; set; } = default!;
+    public virtual DbSet<Contract> Contracts { get; set; } = default!;
+    public virtual DbSet<Department> Departments { get; set; } = default!;
 
     protected override void ConfigureConventions(ModelConfigurationBuilder builder)
     {

@@ -33,11 +33,15 @@ public class Contract
     [Display(Name = "Срок")]
     public string? Term { get; set; }
 
+    public int? ControlledById { get; set; }
+
     [Display(Name = "Контролиращ отдел")]
-    public Department? ControlledBy { get; set; }
+    public virtual Department ControlledBy { get; set; }
+
+    public int? ResponsibleId { get; set; }
 
     [Display(Name = "Отговорен отдел")]
-    public Department? Responsible { get; set; }
+    public virtual Department Responsible { get; set; }
 
     [Display(Name = "Гаранция")]
     [DataType(DataType.Currency), Column(TypeName = "decimal(18, 2)")]
