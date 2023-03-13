@@ -50,13 +50,13 @@
             @Html.DisplayNameFor(model => model.ControlledBy)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ControlledBy)
+            @Html.DisplayFor(model => model.ControlledBy.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Responsible)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Responsible)
+            @Html.DisplayFor(model => model.Responsible.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Guarantee)
@@ -76,10 +76,27 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.InformationList)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OwnerID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OwnerID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FilePath)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FilePath)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Редактиране</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Изтриване</a> |
-    <a asp-action="Index">Обратно към списъка</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

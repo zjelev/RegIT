@@ -13,30 +13,20 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
- 
-            @* @foreach (var prop in ContractsViewModel.propsArr) //var attr in typeof(Contract).GetProperties()
-            {
-                <div class="form-group">
-                    <label class="control-label" asp-for="@prop"></label>
-                    <input class="form-control" asp-for="@prop"  />
-                    <span asp-validation-for="@prop" class="text-danger"></span>
-                </div>
-            } *@
-
-            <div class="form-group">
-                <label asp-for="RegNum" class="control-label"></label>
-                <input asp-for="RegNum" class="form-control" />
-                <span asp-validation-for="RegNum" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="SignedOn" class="control-label"></label>
-                <input asp-for="SignedOn" class="form-control" value="@Model.SignedOn.ToString("yyyy-MM-dd")"/>
+                <input asp-for="SignedOn" class="form-control" />
                 <span asp-validation-for="SignedOn" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ValidFrom" class="control-label"></label>
-                <input asp-for="ValidFrom" class="form-control" value="@Model.SignedOn.ToString("yyyy-MM-dd")"/>
+                <input asp-for="ValidFrom" class="form-control" />
                 <span asp-validation-for="ValidFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegNum" class="control-label"></label>
+                <input asp-for="RegNum" class="form-control" />
+                <span asp-validation-for="RegNum" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Subject" class="control-label"></label>
@@ -54,14 +44,14 @@
                 <span asp-validation-for="Term" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ControlledBy" class="control-label"></label>
-                <input asp-for="ControlledBy" class="form-control" />
-                <span asp-validation-for="ControlledBy" class="text-danger"></span>
+                <label asp-for="ControlledById" class="control-label"></label>
+                <select asp-for="ControlledById" class="form-control" asp-items="ViewBag.Departments"></select>
+                <span asp-validation-for="ControlledById" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Responsible" class="control-label"></label>
-                <input asp-for="Responsible" class="form-control" />
-                <span asp-validation-for="Responsible" class="text-danger"></span>
+                <label asp-for="ResponsibleId" class="control-label"></label>
+                <select asp-for="ResponsibleId" class="form-control" asp-items="ViewBag.Departments"></select>
+                <span asp-validation-for="ResponsibleId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Guarantee" class="control-label"></label>
@@ -79,24 +69,31 @@
                 <span asp-validation-for="InformationList" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="OwnerID" class="control-label"></label>
+                <input asp-for="OwnerID" class="form-control" />
+                <span asp-validation-for="OwnerID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="FilePath" class="control-label"></label>
                 <input asp-for="FilePath" class="form-control" />
                 <span asp-validation-for="FilePath" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <input type="submit" value="Запази" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Обратно към списъка</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

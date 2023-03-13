@@ -36,12 +36,12 @@ public class Contract
     public int? ControlledById { get; set; }
 
     [Display(Name = "Контролиращ отдел")]
-    public virtual Department ControlledBy { get; set; }
+    public virtual Department? ControlledBy { get; set; }
 
     public int? ResponsibleId { get; set; }
 
     [Display(Name = "Отговорен отдел")]
-    public virtual Department Responsible { get; set; }
+    public virtual Department? Responsible { get; set; }
 
     [Display(Name = "Гаранция")]
     [DataType(DataType.Currency), Column(TypeName = "decimal(18, 2)")]

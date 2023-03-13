@@ -8,7 +8,7 @@
 
 <h3>Сигурни ли сте?</h3>
 <div>
-    <h4>Договор</h4>
+    <h4>Contract</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -51,13 +51,13 @@
             @Html.DisplayNameFor(model => model.ControlledBy)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ControlledBy)
+            @Html.DisplayFor(model => model.ControlledBy.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Responsible)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Responsible)
+            @Html.DisplayFor(model => model.Responsible.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Guarantee)
@@ -76,6 +76,24 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.InformationList)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OwnerID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OwnerID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FilePath)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FilePath)
         </dd>
     </dl>
     

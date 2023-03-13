@@ -1,3 +1,4 @@
+@* @model IEnumerable<Contract> *@
 @model ContractsViewModel
 
 @{
@@ -33,22 +34,22 @@
             <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Subject)</th>
             <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Value)</th>
             <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Term)</th>
-            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().ControlledBy)</th>
             <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Responsible)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().ControlledBy)</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var contract in Model.Contracts!)
-        {
-            <tr>
-                <td><a asp-action="Details" asp-route-id="@contract.Id">@contract.RegNum</a></td>
-                <td>@contract.SignedOn</td>
-                <td>@contract.Subject</td>
-                <td>@contract.Value</td>
-                <td>@contract.Term</td>
-                <td>@contract.Responsible?.Name</td>
-                <td>@contract.ControlledBy?.Name</td>
-            </tr>
-        }
+@foreach (var contract in Model.Contracts!) 
+    {
+        <tr>
+            <td><a asp-action="Details" asp-route-id="@contract.Id">@contract.RegNum</a></td>
+            <td>@contract.SignedOn</td>
+            <td>@contract.Subject</td>
+            <td>@contract.Value</td>
+            <td>@contract.Term</td>
+            <td>@contract.ControlledBy?.Name</td>
+            <td>@contract.Responsible?.Name</td>
+        </tr>
+    }
     </tbody>
 </table>

@@ -9,6 +9,4 @@ public class ContractsViewModel
     public string? selectDepartment { get; set; }
     public IEnumerable<Department>? Departments { get; set; }
     public IEnumerable<Contract>? Contracts { get; set; }
-    public Department Department { get; set; }
-    public Contract Contract { get; set; }
 }
