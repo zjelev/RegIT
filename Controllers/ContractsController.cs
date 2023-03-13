@@ -1,22 +1,35 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using Regit.Authorization;
 using Regit.Data;
 using Regit.Models;
 
-namespace Regit.Controllers
-{
+namespace Regit.Controllers;
+
     public class ContractsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly string[] _tableHeader;
 
         public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+            _tableHeader = TypeDescriptor.GetProperties(typeof(Contract))
+            .Cast<PropertyDescriptor>()
+            .Select(property =>
+                {
+                    DisplayAttribute? displayAttribute = property.Attributes.OfType<DisplayAttribute>().FirstOrDefault();
+                    string? propertyName = displayAttribute?.Name ?? property.Name;
+                    return (propertyName);
+                })
+            .ToArray();
         }
 
         // GET: Contracts
@@ -60,6 +73,46 @@ namespace Regit.Controllers
                 return Forbid();
         }
 
+        // [HttpPost]
+    // public string Index(string searchString, bool notUsed) => "From [HttpPost]Index: filter on " + searchString;
+
+    public IActionResult Download(string? searchSubject, string? department)
+    {
+        var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
+                           User.IsInRole(Constants.AdministratorsRole);
+
+        var currentUserId = _userManager.GetUserId(User);
+        if (_context.Contracts == null)
+            return Problem("Entity set 'ContractContext.Contract'  is null.");
+
+        var contracts = _context.Contracts.Select(c => c);
+
+        if (isAuthorized)
+        {
+            if (!String.IsNullOrEmpty(searchSubject))
+                contracts = contracts.Where(c => c.Subject!.Contains(searchSubject));
+
+            if (!String.IsNullOrEmpty(department))
+                contracts = contracts.Where(c => c.Responsible.Name == department);
+        }
+
+        using var stream = new MemoryStream();
+
+        using ExcelPackage package = new ExcelPackage(stream);
+        ExcelWorksheet ws = package.Workbook.Worksheets.Add("Sheet1");
+        ws.Cells.LoadFromCollection(contracts, true);
+
+        for (int i = 0; i < _tableHeader.Count(); i++)
+            ws.Cells[1, i + 1].Value = _tableHeader[i];
+
+        package.Save();
+
+        string excelName = "Contracts.xlsx";
+
+        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);  //application/octet-stream
+    }
+
+    
         // GET: Contracts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -182,27 +235,20 @@ namespace Regit.Controllers
         }
 
         // POST: Contracts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Contracts == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Contracts'  is null.");
-            }
+                return Problem("Entity set 'ApplicationDbContext.Contract'  is null.");
+
             var contract = await _context.Contracts.FindAsync(id);
             if (contract != null)
-            {
                 _context.Contracts.Remove(contract);
-            }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ContractExists(int id)
-        {
-            return (_context.Contracts?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        private bool ContractExists(int id) =>
+            (_context.Contracts?.Any(e => e.Id == id)).GetValueOrDefault();
     }
-}
