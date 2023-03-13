@@ -1,0 +1,62 @@
+@model Contract
+
+@{
+    ViewData["Title"] = "Добавяне";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Договор</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RegNum" class="control-label"></label>
+                <input asp-for="RegNum" class="form-control" />
+                <span asp-validation-for="RegNum" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValidFrom" class="control-label"></label>
+                <input asp-for="ValidFrom" class="form-control" />
+                <span asp-validation-for="ValidFrom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input asp-for="Value" class="form-control" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Term" class="control-label"></label>
+                <input asp-for="Term" class="form-control" />
+                <span asp-validation-for="Term" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ResponsibleId" class="control-label"></label>
+                <select asp-for="ResponsibleId" class ="form-control" asp-items="ViewBag.Departments"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="FilePath" class="control-label"></label>
+                <input asp-for="FilePath" class="form-control" />
+                <span asp-validation-for="FilePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Обратно към списъка</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

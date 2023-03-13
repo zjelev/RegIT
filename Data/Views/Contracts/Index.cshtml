@@ -1,0 +1,55 @@
+@* @model IEnumerable<Contract> *@
+@model ContractsViewModel
+
+@{
+    ViewData["Title"] = "Списък";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<form>
+    <select asp-for="selectDepartment" asp-items="@(new SelectList(Model.Departments, nameof(Department.Name)))"> 
+                                                          @* Model.GroupBy(c => c.Responsible).Select(grp => grp.First()).ToList()))"> *@
+        <option value="">Всички</option>
+    </select>
+    <span>Предмет: </span><input type="text" asp-for="searchSubject" />
+    @* <label searchFrom="FromDate">От дата:</label>
+    <input type="date" name="from" placeholder="dd-MM-yyyy" value="@ViewBag.From" />
+    <label searchTo="ToDate">До дата:</label>
+    <input type="date" name="to" placeholder="dd-MM-yyyy" value="@ViewBag.To" /> *@
+    <input type=submit value="Търси" />
+</form>
+
+<span class = "float-end">
+    <a asp-action="Create">Добави</a> | 
+    <a asp-action="Download" asp-route-searchSubject=@ViewData["SearchSubject"] asp-route-department=@ViewData["Department"]>Свали списък</a>
+</span>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().RegNum)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().ValidFrom)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Subject)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Value)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Term)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().Responsible)</th>
+            <th>@Html.DisplayNameFor(model => model.Contracts!.FirstOrDefault().ControlledBy)</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var contract in Model.Contracts!) 
+    {
+        <tr>
+            <td><a asp-action="Details" asp-route-id="@contract.Id">@contract.RegNum</a></td>
+            <td>@contract.SignedOn</td>
+            <td>@contract.Subject</td>
+            <td>@contract.Value</td>
+            <td>@contract.Term</td>
+            <td>@contract.ControlledBy?.Name</td>
+            <td>@contract.Responsible?.Name</td>
+        </tr>
+    }
+    </tbody>
+</table>
