@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="ValidFrom" class="control-label"></label>
-                <input asp-for="ValidFrom" class="form-control" />
+                <input asp-for="ValidFrom" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
                 <span asp-validation-for="ValidFrom" class="text-danger"></span>
             </div>
             <div class="form-group">
