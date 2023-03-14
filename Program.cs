@@ -3,7 +3,7 @@
 // dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 // dotnet aspnet-codegenerator controller -name ContractsController -m Contract -dc Regit.Data.ApplicationDbContext --relativeFolderPath Controllers --referenceScriptLibraries
 // "@{ Layout = "/Views/Shared/_Layout.cshtml"; }" | Out-File -FilePath Areas\Identity\Pages\_ViewStart.cshtml
-// dotnet ef migrations add InitialCreate
+// dotnet ef migrations add Initial -o Data\Migrations
 // dotnet ef database update
 // git update-index --assume-unchanged .\appsettings.json
 
@@ -12,6 +12,9 @@ using Microsoft.EntityFrameworkCore;
 using Regit.Data;
 using Microsoft.AspNetCore.Authorization;
 using Regit.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,18 +41,30 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 
 // builder.Services.Configure<IdentityOptions>(options => { });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddLocalization(); // options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+    {
+        options.SetDefaultCulture("en-US");
+        options.AddSupportedUICultures("bg");
+        options.FallBackToParentUICultures = true;
+        //options.RequestCultureProviders.Clear();
+    });
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
 
 builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser() //all users to be authenticated, except with [AllowAnonymous]
         .Build()
-);
+    );
 
 // Authorization handlers.
 builder.Services.AddScoped<IAuthorizationHandler, IsOwnerAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, AdministratorsAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, ManagerAuthorizationHandler>();
+
 
 var app = builder.Build();
 
@@ -82,6 +97,8 @@ app.UseRouting();
 
 app.UseAuthorization();
 //app.UseAuthentication();
+
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 app.MapControllerRoute(
     name: "default",

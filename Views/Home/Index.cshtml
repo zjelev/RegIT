@@ -1,7 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Регистри";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Registers"];
 }
 
 <div class="text-center">
     <h3 class="display-4">@ViewData["Title"]</h3>
 </div>
+
+<p>@Localizer["Register and store documents."]</p>

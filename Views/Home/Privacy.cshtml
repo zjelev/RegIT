@@ -1,6 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Политика за поверителност";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Privacy"];
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Опазваме личните Ви данни, но все пак не споделяйте излишни неща.</p>
+<p>@Localizer["We preserve your data, but still do not share unnecessary info."]</p>
