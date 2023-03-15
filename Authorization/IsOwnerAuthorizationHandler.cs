@@ -30,7 +30,7 @@ public class IsOwnerAuthorizationHandler: AuthorizationHandler<OperationAuthoriz
             requirement.Name != Constants.DeleteOperationName)
             return Task.CompletedTask;
 
-        if (resource.OwnerID == _userManager.GetUserId(context.User))
+        if (resource.OwnerId == _userManager.GetUserId(context.User))
             context.Succeed(requirement);
 
         return Task.CompletedTask;

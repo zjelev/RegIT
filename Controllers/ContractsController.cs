@@ -171,6 +171,8 @@ public class ContractsController : Controller
                     contract.FileBytes = ms.ToArray();
                 }
             }
+            contract.OwnerId = _userManager.GetUserId(User);
+
             _context.Add(contract);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
