@@ -360,3 +360,4 @@ config.json
 logo.png
 appsettings.json
 Migrations/
+wwwroot/uploads/
