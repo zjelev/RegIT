@@ -89,10 +89,16 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FileBytes)
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@Model.FileBytes?.FirstOrDefault()</span>
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FilePath)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FilePath)
+            <a href = "/@Model.FilePath">Виж файл</a>
         </dd>
     </dl>
 </div>

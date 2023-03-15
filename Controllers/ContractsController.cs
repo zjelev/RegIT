@@ -17,8 +17,9 @@ public class ContractsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly string[] _tableHeader;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+    public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
     {
         _context = context;
         _userManager = userManager;
@@ -31,6 +32,7 @@ public class ContractsController : Controller
                     return (propertyName);
                 })
             .ToArray();
+        _webHostEnvironment = webHostEnvironment;
     }
 
     // GET: Contracts
@@ -148,6 +150,27 @@ public class ContractsController : Controller
 
         if (ModelState.IsValid)
         {
+            if (contract.File != null)
+            {
+                if (contract.File.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
+                {
+                    var fileName = GetUniqueFileName(contract.File.FileName);
+                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                    uploads = Path.Combine(uploads, contract.ResponsibleId.ToString());
+                    var filePath = Path.Combine(uploads, fileName);
+                    using var stream = System.IO.File.Create(filePath);
+                    await contract.File.CopyToAsync(stream);
+                    contract.FilePath = "uploads/" + contract.ResponsibleId.ToString() + "/" + fileName;
+                }
+                else
+                {
+                    using MemoryStream ms = new MemoryStream();
+                    // copy the file to memory stream 
+                    await contract.File.CopyToAsync(ms);
+                    // set the byte array 
+                    contract.FileBytes = ms.ToArray();
+                }
+            }
             _context.Add(contract);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -232,4 +255,14 @@ public class ContractsController : Controller
 
     private bool ContractExists(int id) =>
         (_context.Contracts?.Any(e => e.Id == id)).GetValueOrDefault();
+
+    private string GetUniqueFileName(string fileName)
+    {
+        fileName = Path.GetFileName(fileName);
+        return Path.GetFileNameWithoutExtension(fileName)
+                  + "_"
+                  //+ Guid.NewGuid().ToString().Substring(0, 4) 
+                  + DateTime.Now.ToString("yyyy-MM-dd_HH-mm")
+                  + Path.GetExtension(fileName);
+    }
 }

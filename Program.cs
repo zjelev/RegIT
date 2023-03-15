@@ -75,11 +75,11 @@ context.Database.Migrate();
 // Set password with the Secret Manager tool. dotnet user-secrets set SeedUserPW <pw>
 var testUserPw = builder.Configuration.GetValue<string>("SeedUserPW");
 var domain = builder.Configuration.GetValue<string>("domain");
-await SeedData.Initialize(services, testUserPw, domain);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    await SeedData.Initialize(services, testUserPw, domain);
     app.UseMigrationsEndPoint();
     app.UseDeveloperExceptionPage();
     app.UseDatabaseErrorPage();

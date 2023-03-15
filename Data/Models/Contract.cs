@@ -5,8 +5,6 @@ namespace Regit.Models;
 
 public class Contract
 {
-    [NotMapped]
-    public const string props = "Id,SignedOn,Title,ValidFrom,RegNum,Subject,Value,Term,ControlledBy,Responsible,Guarantee,WaysOfCollection,InformationList,Status,FilePath";
     // public static string[] propsArr = props.Split(',', StringSplitOptions.RemoveEmptyEntries);
     public int Id { get; set; }
 
@@ -63,7 +61,14 @@ public class Contract
     public ContractStatus Status { get; set; }
 
     [Display(Name = "Файл")]
+    [NotMapped]
+    public IFormFile? File { set; get; }
+
+    [Display(Name = "Файл")]
     public string? FilePath { get; set; }
+
+    [Display(Name = "Малък файл")]
+    public byte[]? FileBytes { get; set; }
 }
 
 public enum ContractStatus
