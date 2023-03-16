@@ -2,6 +2,7 @@
 // dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 // dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 // dotnet aspnet-codegenerator controller -name ContractsController -m Contract -dc Regit.Data.ApplicationDbContext --relativeFolderPath Controllers --referenceScriptLibraries
+// dotnet aspnet-codegenerator identity -dc Regit.Data.ApplicationDbContext --files "Account.Register;Account.Login"
 // "@{ Layout = "/Views/Shared/_Layout.cshtml"; }" | Out-File -FilePath Areas\Identity\Pages\_ViewStart.cshtml
 // dotnet ef migrations add Initial -o Data\Migrations
 // dotnet ef database update
@@ -13,7 +14,6 @@ using Regit.Data;
 using Microsoft.AspNetCore.Authorization;
 using Regit.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
