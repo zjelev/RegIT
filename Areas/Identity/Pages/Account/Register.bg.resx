@@ -1,9 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <data name="Create a new account." xml:space="preserve">
-    <value>Създаване на нов потребител</value>
-  </data>
   <data name="Register" xml:space="preserve">
     <value>Регистрация</value>
+  </data>
+  <data name="Create a new account" xml:space="preserve">
+    <value>Създаване на нов потребител</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Парола</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>Потвърди парола</value>
+  </data>
+  <data name="Use another service to register" xml:space="preserve">
+    <value>Регистрация през външна услуга</value>
+  </data>
+  <data name="There are no external authentication services configured. See this" xml:space="preserve">
+    <value>Няма конфигурирани външни услуги. Виж тази</value>
+  </data>
+  <data name="article about setting up this application to support logging in via external services" xml:space="preserve">
+    <value>статия относно конфигурирането на външни услуги</value>
   </data>
 </root>
