@@ -1,2 +1,2 @@
 # RegIT
-Web application for registration and editing corporate documents.
+Web application for document registering and archiving.
