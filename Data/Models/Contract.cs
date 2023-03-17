@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Regit.Models;
 
@@ -54,8 +55,10 @@ public class Contract
     [Display(Name = "Инф. лист")]
     public string? InformationList { get; set; }
 
-    [Display(Name = "Добавен от")]
     public string? OwnerId { get; set; }
+
+    [Display(Name = "Добавен от")]
+    public virtual IdentityUser? Owner { get; set; }
 
     [Display(Name = "Статус")]
     public ContractStatus Status { get; set; }

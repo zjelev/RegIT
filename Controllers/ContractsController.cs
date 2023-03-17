@@ -123,6 +123,7 @@ public class ContractsController : Controller
         var contract = await _context.Contracts
             .Include(c => c.ControlledBy)
             .Include(c => c.Responsible)
+            .Include(c => c.Owner)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (contract == null)
             return NotFound();

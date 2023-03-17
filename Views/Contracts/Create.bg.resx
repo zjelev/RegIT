@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Create" xml:space="preserve">
+    <value>Добавяне</value>
+  </data>
+  <data name="Registers" xml:space="preserve">
+    <value>Регистри</value>
+  </data>
+  <data name="Choose File" xml:space="preserve">
+    <value>Избери файл</value>
+  </data>
+  <data name="No file chosen" xml:space="preserve">
+    <value>Не е избран файл</value>
+  </data>
+</root>
