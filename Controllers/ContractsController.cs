@@ -157,11 +157,12 @@ public class ContractsController : Controller
                 {
                     var fileName = GetUniqueFileName(contract.File.FileName);
                     var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-                    uploads = Path.Combine(uploads, contract.ResponsibleId.ToString());
+                    var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
+                    uploads = Path.Combine(uploads, department);
                     var filePath = Path.Combine(uploads, fileName);
-                    using var stream = System.IO.File.Create(filePath);
+                    using FileStream stream = System.IO.File.Create(filePath);
                     await contract.File.CopyToAsync(stream);
-                    contract.FilePath = "uploads/" + contract.ResponsibleId.ToString() + "/" + fileName;
+                    contract.FilePath = "uploads/" + department + "/" + fileName;
                 }
                 else
                 {

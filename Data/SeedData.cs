@@ -107,7 +107,8 @@ public static class SeedData
                     ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(2)),
                     RegNum = "TO 1/2023",
                     Value = 2337.99M,
-                    Responsible = context.Departments.Where(d => d.Name == "АО").FirstOrDefault()
+                    Responsible = context.Departments.Where(d => d.Name == "АО").FirstOrDefault(),
+                    Owner = context.Users.FirstOrDefault()
                 },
                 new Contract
                 {
@@ -116,8 +117,9 @@ public static class SeedData
                     ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(3)),
                     RegNum = "TO 2/2023",
                     Value = 3537.99M,
-                    Responsible = context.Departments.Where(d => d.Name == "МО").FirstOrDefault()
-                },
+                    Responsible = context.Departments.Where(d => d.Name == "МО").FirstOrDefault(),
+                    Owner = context.Users.OrderBy(u => u.UserName).FirstOrDefault()
+    },
                 new Contract
                 {
                     SignedOn = DateOnly.FromDateTime(DateTime.Now.AddDays(4)),
@@ -125,7 +127,8 @@ public static class SeedData
                     ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(5)),
                     RegNum = "VD 3/2023",
                     Value = 2337.99M,
-                    Responsible = context.Departments.Where(d => d.Name == "ИО").FirstOrDefault()
+                    Responsible = context.Departments.Where(d => d.Name == "ИО").FirstOrDefault(),
+                    Owner = context.Users.OrderBy(u => u.UserName).LastOrDefault()
 
                 },
                 new Contract
@@ -135,7 +138,8 @@ public static class SeedData
                     ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(7)),
                     RegNum = "TO 4/2023",
                     Value = 2337.99M,
-                    Responsible = context.Departments.Where(d => d.Name == "ЕО").FirstOrDefault()
+                    Responsible = context.Departments.Where(d => d.Name == "ЕО").FirstOrDefault(),
+                    Owner = context.Users.OrderBy(u => u.UserName).FirstOrDefault()
                 },
                 new Contract
                 {
@@ -144,7 +148,8 @@ public static class SeedData
                     ValidFrom = DateOnly.FromDateTime(DateTime.Now.AddDays(9)),
                     RegNum = "TO 21/2023",
                     Value = 2337.99M,
-                    Responsible = context.Departments.Where(d => d.Name == "ИВ").FirstOrDefault()
+                    Responsible = context.Departments.Where(d => d.Name == "ИВ").FirstOrDefault(),
+                    Owner = context.Users.OrderBy(u => u.UserName).LastOrDefault()
                 }
             );
 
