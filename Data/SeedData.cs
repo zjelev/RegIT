@@ -70,7 +70,7 @@ public static class SeedData
         return IR;
     }
 
-    public static void SeedDB(ApplicationDbContext context, string adminID)
+    private static async Task SeedDB(ApplicationDbContext context, string adminID)
     {
         if (!context.Departments.Any())
             context.Departments.AddRange(
@@ -96,7 +96,7 @@ public static class SeedData
                 }
             );
 
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         if (!context.Contracts.Any())
             context.Contracts.AddRange(
@@ -119,7 +119,7 @@ public static class SeedData
                     Value = 3537.99M,
                     Responsible = context.Departments.Where(d => d.Name == "МО").FirstOrDefault(),
                     Owner = context.Users.OrderBy(u => u.UserName).FirstOrDefault()
-    },
+                },
                 new Contract
                 {
                     SignedOn = DateOnly.FromDateTime(DateTime.Now.AddDays(4)),
@@ -153,6 +153,6 @@ public static class SeedData
                 }
             );
 
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 }

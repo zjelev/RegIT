@@ -160,6 +160,9 @@ public class ContractsController : Controller
                     var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
                     uploads = Path.Combine(uploads, department);
                     var filePath = Path.Combine(uploads, fileName);
+                    if (!Directory.Exists(uploads))
+                        Directory.CreateDirectory(uploads);
+                        
                     using FileStream stream = System.IO.File.Create(filePath);
                     await contract.File.CopyToAsync(stream);
                     contract.FilePath = department + Path.DirectorySeparatorChar + fileName;
