@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Regit.Authorization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,15 +51,26 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         //options.RequestCultureProviders.Clear();
     });
 
-builder.Services.AddControllersWithViews()
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-    .AddDataAnnotationsLocalization();
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//     .AddCookie(options =>
+//     {
+//         options.Cookie.Name = "YourAppCookieName";
+//         options.LoginPath = "/Account/Login";
+//         options.LogoutPath = "/Account/Logout";
+//         options.AccessDeniedPath = "/Account/AccessDenied";
+//         options.Cookie.HttpOnly = true;
+//         options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+//     });
 
 builder.Services.AddAuthorization(options =>
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser() //all users to be authenticated, except with [AllowAnonymous]
         .Build()
     );
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
 
 // Authorization handlers.
 builder.Services.AddScoped<IAuthorizationHandler, IsOwnerAuthorizationHandler>();
@@ -91,18 +103,32 @@ else
 }
 
 app.UseHttpsRedirection(); //letsencrypt
-app.UseStaticFiles();
 
 app.UseRouting();
 
+// app.UseAuthentication();
 app.UseAuthorization();
-//app.UseAuthentication();
+app.UseStaticFiles(); 
+//    (new StaticFileOptions()
+// {
+//     OnPrepareResponse = ctx =>
+//     {
+//         ctx.Context.Response.Headers.Add("Cache-Control", "no-store");
+//         if (!ctx.Context.User.Identity.IsAuthenticated)
+//         {
+//             ctx.Context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;  // respond HTTP 401 Unauthorized.
+//             ctx.Context.Response.ContentLength = 0;
+//             ctx.Context.Response.Body = Stream.Null;
+//         }
+//     }
+// });
 
 app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages(); //
 
 app.Run();

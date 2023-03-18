@@ -17,9 +17,9 @@ public class ContractsController : Controller
     private readonly ApplicationDbContext _context;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly string[] _tableHeader;
-    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IWebHostEnvironment _env;
 
-    public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+    public ContractsController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment env)
     {
         _context = context;
         _userManager = userManager;
@@ -32,7 +32,7 @@ public class ContractsController : Controller
                     return (propertyName);
                 })
             .ToArray();
-        _webHostEnvironment = webHostEnvironment;
+        _env = env;
     }
 
     // GET: Contracts
@@ -79,7 +79,7 @@ public class ContractsController : Controller
     // [HttpPost]
     // public string Index(string searchString, bool notUsed) => "From [HttpPost]Index: filter on " + searchString;
 
-    public IActionResult Download(string? searchSubject, string? department)
+    public IActionResult DownloadXlsx(string? searchSubject, string? department)
     {
         var isAuthorized = User.IsInRole(Constants.ManagersRole) ||
                            User.IsInRole(Constants.AdministratorsRole);
@@ -156,13 +156,13 @@ public class ContractsController : Controller
                 if (contract.File.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
                 {
                     var fileName = GetUniqueFileName(contract.File.FileName);
-                    var uploads = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                    var uploads = Path.Combine(_env.ContentRootPath, "uploads");
                     var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
                     uploads = Path.Combine(uploads, department);
                     var filePath = Path.Combine(uploads, fileName);
                     using FileStream stream = System.IO.File.Create(filePath);
                     await contract.File.CopyToAsync(stream);
-                    contract.FilePath = "uploads/" + department + "/" + fileName;
+                    contract.FilePath = department + Path.DirectorySeparatorChar + fileName;
                 }
                 else
                 {
@@ -255,6 +255,38 @@ public class ContractsController : Controller
 
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
+    }
+
+    // [HttpPost]
+    // public async Task<IActionResult> Upload(IFormFile file)
+    // {
+    //     if (file == null || file.Length == 0)
+    //     {
+    //         return BadRequest("Invalid file");
+    //     }
+
+    //     var filePath = Path.Combine(_env.ContentRootPath, "uploads", file.FileName);
+
+    //     using (var stream = new FileStream(filePath, FileMode.Create))
+    //     {
+    //         await file.CopyToAsync(stream);
+    //     }
+
+    //     return Ok();
+    // }
+
+    [HttpGet]
+    public IActionResult Download(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+            return BadRequest("Invalid file name");
+
+        var filePath = _env.ContentRootPath + Path.DirectorySeparatorChar + "uploads" + Path.DirectorySeparatorChar + fileName;
+
+        if (!System.IO.File.Exists(filePath))
+            return NotFound();
+
+        return PhysicalFile(filePath, "application/octet-stream", Path.GetFileName(fileName));
     }
 
     private bool ContractExists(int id) =>
