@@ -156,13 +156,13 @@ public class ContractsController : Controller
                 if (contract.File.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
                 {
                     var fileName = GetUniqueFileName(contract.File.FileName);
-                    var uploads = Path.Combine(_env.ContentRootPath, "uploads");
                     var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
-                    uploads = Path.Combine(uploads, department);
-                    var filePath = Path.Combine(uploads, fileName);
+                    var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
+
                     if (!Directory.Exists(uploads))
                         Directory.CreateDirectory(uploads);
-                        
+
+                    var filePath = Path.Combine(uploads, fileName);   
                     using FileStream stream = System.IO.File.Create(filePath);
                     await contract.File.CopyToAsync(stream);
                     contract.FilePath = department + Path.DirectorySeparatorChar + fileName;
