@@ -151,29 +151,32 @@ public class ContractsController : Controller
 
         if (ModelState.IsValid)
         {
-            if (contract.File != null)
+            foreach (var file in contract.Files)
             {
-                if (contract.File.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
+                if (file != null)
                 {
-                    var fileName = GetUniqueFileName(contract.File.FileName);
-                    var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
-                    var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
+                    if (file.FormFile.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
+                    {
+                        var fileName = GetUniqueFileName(file.FormFile.FileName);
+                        var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
+                        var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
 
-                    if (!Directory.Exists(uploads))
-                        Directory.CreateDirectory(uploads);
+                        if (!Directory.Exists(uploads))
+                            Directory.CreateDirectory(uploads);
 
-                    var filePath = Path.Combine(uploads, fileName);   
-                    using FileStream stream = System.IO.File.Create(filePath);
-                    await contract.File.CopyToAsync(stream);
-                    contract.FilePath = department + Path.DirectorySeparatorChar + fileName;
-                }
-                else
-                {
-                    using MemoryStream ms = new MemoryStream();
-                    // copy the file to memory stream 
-                    await contract.File.CopyToAsync(ms);
-                    // set the byte array 
-                    contract.FileBytes = ms.ToArray();
+                        var filePath = Path.Combine(uploads, fileName);
+                        using FileStream stream = System.IO.File.Create(filePath);
+                        await file.FormFile.CopyToAsync(stream);
+                        file.Path = department + Path.DirectorySeparatorChar + fileName;
+                    }
+                    else
+                    {
+                        using MemoryStream ms = new MemoryStream();
+                        // copy the file to memory stream 
+                        await file.FormFile.CopyToAsync(ms);
+                        // set the byte array 
+                        file.Bytes = ms.ToArray();
+                    }
                 }
             }
             contract.OwnerId = _userManager.GetUserId(User);

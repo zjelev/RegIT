@@ -3,7 +3,7 @@ namespace Regit.Models;
 public class ContractsViewModel
 {
     public const string props = "Id,SignedOn,ValidFrom,RegNum,Subject,Value,Term,ControlledById," +
-        "ResponsibleId,Guarantee,WaysOfCollection,InformationList,OwnerId,Status,File,FilePath,FileBytes";
+        "ResponsibleId,Guarantee,WaysOfCollection,InformationList,OwnerId,Status,Files";
 
     public string? searchSubject { get; set; }
     public string? selectDepartment { get; set; }

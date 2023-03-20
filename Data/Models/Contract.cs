@@ -65,13 +65,7 @@ public class Contract
 
     [Display(Name = "Файл")]
     [NotMapped]
-    public IFormFile? File { set; get; }
-
-    [Display(Name = "Файл")]
-    public string? FilePath { get; set; }
-
-    [Display(Name = "Малък файл")]
-    public byte[]? FileBytes { get; set; }
+    public IEnumerable<UploadedFile>? Files { set; get; }
 }
 
 public enum ContractStatus
