@@ -6,7 +6,6 @@ namespace Regit.Models;
 
 public class Contract
 {
-    // public static string[] propsArr = props.Split(',', StringSplitOptions.RemoveEmptyEntries);
     public int Id { get; set; }
 
     [Required, Display(Name = "Подписан на"), DataType(DataType.Date)]
@@ -64,7 +63,7 @@ public class Contract
     public ContractStatus? Status { get; set; }
 
     [Display(Name = "Файл")]
-    public virtual IEnumerable<UploadedFile>? Files { set; get; }
+    public virtual ICollection<UploadedFile>? Files { set; get; }
 }
 
 public enum ContractStatus

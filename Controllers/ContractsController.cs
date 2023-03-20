@@ -143,7 +143,7 @@ public class ContractsController : Controller
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> Create([Bind(ContractsViewModel.props)] Contract contract)
+    public async Task<IActionResult> Create([Bind(ContractsViewModel.props)] Contract contract, List<IFormFile> files)
     {
         var errors = ModelState
             .Where(x => x.Value.Errors.Count > 0)
@@ -152,31 +152,47 @@ public class ContractsController : Controller
 
         if (ModelState.IsValid)
         {
-            foreach (var file in contract.Files)
+            if (files != null && files.Count > 0)
             {
-                if (file != null)
+                contract.Files = new List<UploadedFile>();
+
+                foreach (var file in files)
                 {
-                    if (file.FormFile.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
+                    if (file != null)
                     {
-                        var fileName = GetUniqueFileName(file.FormFile.FileName);
-                        var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
-                        var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
+                        if (file.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
+                        {
+                            var fileName = GetUniqueFileName(file.FileName);
+                            var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
+                            var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
 
-                        if (!Directory.Exists(uploads))
-                            Directory.CreateDirectory(uploads);
+                            if (!Directory.Exists(uploads))
+                                Directory.CreateDirectory(uploads);
 
-                        var filePath = Path.Combine(uploads, fileName);
-                        using FileStream stream = System.IO.File.Create(filePath);
-                        await file.FormFile.CopyToAsync(stream);
-                        file.Path = department + Path.DirectorySeparatorChar + fileName;
-                    }
-                    else
-                    {
-                        using MemoryStream ms = new MemoryStream();
-                        // copy the file to memory stream 
-                        await file.FormFile.CopyToAsync(ms);
-                        // set the byte array 
-                        file.Bytes = ms.ToArray();
+                            var filePath = Path.Combine(uploads, fileName);
+                            using FileStream stream = System.IO.File.Create(filePath);
+                            await file.CopyToAsync(stream);
+                            filePath = department + Path.DirectorySeparatorChar + fileName;
+                            var uploadedFile = new UploadedFile
+                            {
+                                Path = filePath,
+                                Contract = contract
+                            };
+                            contract.Files.Add(uploadedFile);
+                        }
+                        else
+                        {
+                            using MemoryStream ms = new MemoryStream();
+                            // copy the file to memory stream 
+                            await file.CopyToAsync(ms);
+                            // set the byte array
+                            var uploadedFile = new UploadedFile
+                            {
+                                Bytes = ms.ToArray(),
+                                Contract = contract
+                            };
+                            contract.Files.Add(uploadedFile);
+                        }
                     }
                 }
             }
@@ -208,7 +224,7 @@ public class ContractsController : Controller
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrators")]
-    public async Task<IActionResult> Edit(int id, [Bind(ContractsViewModel.props)] Contract contract)
+    public async Task<IActionResult> Edit(int id, [Bind(ContractsViewModel.props)] Contract contract, List<IFormFile> files)
     {
         if (id != contract.Id)
             return NotFound();
@@ -217,7 +233,30 @@ public class ContractsController : Controller
         {
             try
             {
+                var existingFiles = _context.Files.Where(f => f.ContractId == id).ToList();
+                if (files != null && files.Count > 0)
+                {
+                    contract.Files = new List<UploadedFile>();
+                    foreach (var file in files)
+                    {
+                        var filePath = Path.Combine("wwwroot", "uploads", file.FileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+                        var uploadedFile = new UploadedFile
+                        {
+                            Path = filePath,
+                            Contract = contract
+                        };
+                        contract.Files.Add(uploadedFile);
+                    }
+                }
+                else
+                    contract.Files = existingFiles;
+
                 _context.Update(contract);
+                _context.RemoveRange(existingFiles.Except(contract.Files));
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -229,6 +268,7 @@ public class ContractsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+
         ViewData["Departments"] = new SelectList(_context.Departments, "Id", "Name");
         return View(contract);
     }
