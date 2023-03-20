@@ -61,11 +61,10 @@ public class Contract
     public virtual IdentityUser? Owner { get; set; }
 
     [Display(Name = "Статус")]
-    public ContractStatus Status { get; set; }
+    public ContractStatus? Status { get; set; }
 
     [Display(Name = "Файл")]
-    [NotMapped]
-    public IEnumerable<UploadedFile>? Files { set; get; }
+    public virtual IEnumerable<UploadedFile>? Files { set; get; }
 }
 
 public enum ContractStatus

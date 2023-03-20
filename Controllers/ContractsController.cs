@@ -124,6 +124,7 @@ public class ContractsController : Controller
             .Include(c => c.ControlledBy)
             .Include(c => c.Responsible)
             .Include(c => c.Owner)
+            .Include(c => c.Files)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (contract == null)
             return NotFound();

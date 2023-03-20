@@ -70,9 +70,10 @@ public static class SeedData
         return IR;
     }
 
-    private static async Task SeedDB(ApplicationDbContext context, string adminID)
+    private static void SeedDB(ApplicationDbContext context, string adminID)
     {
         if (!context.Departments.Any())
+        {
             context.Departments.AddRange(
                 new Department
                 {
@@ -95,10 +96,11 @@ public static class SeedData
                     Name = "ИВ"
                 }
             );
-
-        await context.SaveChangesAsync();
+            context.SaveChanges();
+        }
 
         if (!context.Contracts.Any())
+        {
             context.Contracts.AddRange(
                 new Contract
                 {
@@ -152,7 +154,7 @@ public static class SeedData
                     Owner = context.Users.OrderBy(u => u.UserName).LastOrDefault()
                 }
             );
-
-        await context.SaveChangesAsync();
+            context.SaveChanges();
+        }
     }
 }

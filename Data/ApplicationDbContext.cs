@@ -13,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext
     }
     public virtual DbSet<Contract> Contracts { get; set; } = default!;
     public virtual DbSet<Department> Departments { get; set; } = default!;
+    public virtual DbSet<UploadedFile> Files { get; set; } = default!;
 
     protected override void ConfigureConventions(ModelConfigurationBuilder builder)
     {

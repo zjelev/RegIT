@@ -10,11 +10,13 @@ namespace Regit.Models
         [Display(Name = "Файл")]
         public string? Path { get; set; }
 
-        [Display(Name = "Малък файл")]
         public byte[]? Bytes { get; set; }  // BLOB
 
         [Display(Name = "Файл")]
         [NotMapped]
         public IFormFile? FormFile { set; get; }
+        
+        public int? ContractId { get; set; }
+        public virtual Contract? Contract { get; set; }
     }
 }
