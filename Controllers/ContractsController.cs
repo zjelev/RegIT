@@ -217,6 +217,7 @@ public class ContractsController : Controller
             return NotFound();
 
         ViewData["Departments"] = new SelectList(_context.Departments, "Id", "Name");
+        ViewData["Files"] = new SelectList(_context.Files, "Id", "Path");
         return View(contract);
     }
 
@@ -303,24 +304,6 @@ public class ContractsController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
-
-    // [HttpPost]
-    // public async Task<IActionResult> Upload(IFormFile file)
-    // {
-    //     if (file == null || file.Length == 0)
-    //     {
-    //         return BadRequest("Invalid file");
-    //     }
-
-    //     var filePath = Path.Combine(_env.ContentRootPath, "uploads", file.FileName);
-
-    //     using (var stream = new FileStream(filePath, FileMode.Create))
-    //     {
-    //         await file.CopyToAsync(stream);
-    //     }
-
-    //     return Ok();
-    // }
 
     [HttpGet]
     public IActionResult Download(string fileName)
