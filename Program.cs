@@ -94,7 +94,6 @@ if (app.Environment.IsDevelopment())
     await SeedData.Initialize(services, testUserPw, domain);
     app.UseMigrationsEndPoint();
     app.UseDeveloperExceptionPage();
-    app.UseDatabaseErrorPage();
 }
 else
 {
