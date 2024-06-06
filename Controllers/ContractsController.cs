@@ -152,50 +152,40 @@ public class ContractsController : Controller
 
         if (ModelState.IsValid)
         {
-            if (files != null && files.Count > 0)
+            foreach (var file in files)
             {
-                contract.Files = new List<UploadedFile>();
-
-                foreach (var file in files)
+                var uploadedFile = new UploadedFile
                 {
-                    if (file != null)
-                    {
-                        if (file.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
-                        {
-                            var fileName = GetUniqueFileName(file.FileName);
-                            var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
-                            var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
+                    Contract = contract
+                };
 
-                            if (!Directory.Exists(uploads))
-                                Directory.CreateDirectory(uploads);
+                if (file.Length > 1024 * 16) // || !"application/pdf".Equals(contract.ContractFile.ContentType))
+                {
+                    var fileName = GetUniqueFileName(file.FileName);
+                    var department = _context.Departments.Where(d => d.Id == contract.ResponsibleId).Select(n => n.Name).FirstOrDefault();
+                    var uploads = Path.Combine(_env.ContentRootPath, "uploads", department);
 
-                            var filePath = Path.Combine(uploads, fileName);
-                            using FileStream stream = System.IO.File.Create(filePath);
-                            await file.CopyToAsync(stream);
-                            filePath = department + Path.DirectorySeparatorChar + fileName;
-                            var uploadedFile = new UploadedFile
-                            {
-                                Path = filePath,
-                                Contract = contract
-                            };
-                            contract.Files.Add(uploadedFile);
-                        }
-                        else
-                        {
-                            using MemoryStream ms = new MemoryStream();
-                            // copy the file to memory stream 
-                            await file.CopyToAsync(ms);
-                            // set the byte array
-                            var uploadedFile = new UploadedFile
-                            {
-                                Bytes = ms.ToArray(),
-                                Contract = contract
-                            };
-                            contract.Files.Add(uploadedFile);
-                        }
-                    }
+                    if (!Directory.Exists(uploads))
+                        Directory.CreateDirectory(uploads);
+
+                    var filePath = Path.Combine(uploads, fileName);
+                    using FileStream stream = System.IO.File.Create(filePath);
+                    await file.CopyToAsync(stream);
+                    filePath = department + Path.DirectorySeparatorChar + fileName;
+                    uploadedFile.Path = filePath;
                 }
+                else
+                {
+                    using MemoryStream ms = new MemoryStream();
+                    // copy the file to memory stream 
+                    await file.CopyToAsync(ms);
+                    // set the byte array
+                    uploadedFile.Bytes =  ms.ToArray();
+                        
+                }
+                contract.Files.Add(uploadedFile);
             }
+
             contract.OwnerId = _userManager.GetUserId(User);
 
             _context.Add(contract);
@@ -212,7 +202,7 @@ public class ContractsController : Controller
         if (id == null || _context.Contracts == null)
             return NotFound();
 
-        var contract = await _context.Contracts.FindAsync(id);
+        var contract = await _context.Contracts.Where(c => c.Id == id).Include(c => c.Files).FirstOrDefaultAsync();
         if (contract == null)
             return NotFound();
 
